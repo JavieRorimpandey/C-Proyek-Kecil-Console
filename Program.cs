@@ -1,127 +1,58 @@
-using System;
-using System.Collections.Generic;
+﻿using System;
 
-class Menu
+public class BankAccount
 {
-    private string nama;  
-    private int harga;
+    // TODO 1: Terapkan enkapsulasi. Buat atribut untuk saldo.
+    private double balance;
 
-    public Menu(string nama, int harga)
+    // TODO 2: Lengkapi konstruktor ini untuk menginisialisasi saldo.
+    public BankAccount(double initialBalance)
     {
-        this.nama = nama;
-        this.harga = harga;
+        balance = initialBalance;
     }
 
-    // Encapsulation lewat property
-    public string Nama { get { return nama; } }
-    public int Harga { get { return harga; } }
-}
-
-class Pegawai
-{
-    protected string namaPegawai;
-
-    public Pegawai(string nama)
+    // TODO 3: Buat sebuah properti publik (getter) untuk mendapatkan saldo.
+    public double Balance
     {
-        namaPegawai = nama;
+        get { return balance; }
     }
 
-    public virtual void InfoPeran()
+    // TODO 4: Lengkapi metode Deposit. Pastikan jumlahnya positif.
+    public void Deposit(double amount)
     {
-        Console.WriteLine($"{namaPegawai} adalah Pegawai.");
-    }
-}
-
-class Kasir : Pegawai
-{
-    public Kasir(string nama) : base(nama) { }
-
-    public override void InfoPeran()
-    {
-        Console.WriteLine($"{namaPegawai} adalah Kasir di Point Coffee.");
-    }
-}
-
-class Pesanan
-{
-    private List<Menu> daftarMenu = new List<Menu>();
-
-    public void Tambah(Menu m)
-    {
-        daftarMenu.Add(m);
-    }
-
-    public void Tambah(string nama, int harga)
-    {
-        daftarMenu.Add(new Menu(nama, harga));
-    }
-
-    public void Cetak()
-    {
-        Console.WriteLine("\n=== Pesanan Anda ===");
-        int total = 0;
-        foreach (var m in daftarMenu)
+        if (amount > 0)
         {
-            Console.WriteLine($"- {m.Nama} : Rp {m.Harga}");
-            total += m.Harga;
+            balance += amount;
         }
-        Console.WriteLine($"Total Bayar : Rp {total}");
+    }
+
+    // TODO 5: Lengkapi metode Withdraw. Pastikan jumlahnya cukup dan jumlahnya positif.
+    // Kembalikan nilai boolean (true) jika berhasil dan false jika gagal.
+    public bool Withdraw(double amount)
+    {
+        if (amount > 0 && balance >= amount)
+        {  balance -= amount;
+            return true;
+        }
+        return false;
     }
 }
+
 
 class Program
 {
-    static void Main()
+    static void Main(string[] args)
     {
-        Console.WriteLine("=== Selamat Datang di Point Coffee Indomaret ===");
+        Console.WriteLine("Selamat datang di ATM Sederhana!");
 
-        Kasir kasir = new Kasir("Andi");
-        kasir.InfoPeran();
+        BankAccount myAccount = new BankAccount(1000.0);
+        Console.WriteLine($"Saldo awal: {myAccount.Balance}");
 
-        Pesanan pesanan = new Pesanan();
+        myAccount.Deposit(500.0);
+        myAccount.Withdraw(250.0);
+        myAccount.Withdraw(1500.0); // Coba penarikan yang gagal
+        myAccount.Deposit(-100.0); // Coba deposit yang gagal
 
-        Menu americano = new Menu("Americano", 15000);
-        Menu latte = new Menu("Caffe Latte", 20000);
-        Menu cappuccino = new Menu("Cappuccino", 18000);
-        Menu moccachino = new Menu("Moccachino", 22000);
-
-        bool lanjut = true;
-        while (lanjut)
-        {
-            Console.WriteLine("\nMenu:");
-            Console.WriteLine("1. Americano (Rp 15.000)");
-            Console.WriteLine("2. Caffe Latte (Rp 20.000)");
-            Console.WriteLine("3. Cappuccino (Rp 18.000)");
-            Console.WriteLine("4. Moccachino (Rp 22.000)");
-            Console.WriteLine("0. Selesai");
-
-            Console.Write("Pilih menu: ");
-            string pilihan = Console.ReadLine();
-
-            switch (pilihan)
-            {
-                case "1":
-                    pesanan.Tambah(americano);
-                    break;
-                case "2":
-                    pesanan.Tambah(latte);
-                    break;
-                case "3":
-                    pesanan.Tambah(cappuccino);
-                    break;
-                case "4":
-                    pesanan.Tambah(moccachino);
-                    break;
-                case "0":
-                    lanjut = false;
-                    break;
-                default:
-                    Console.WriteLine("Pilihan tidak valid!");
-                    break;
-            }
-        }
-
-        pesanan.Cetak();
-        Console.WriteLine("\nTerima kasih sudah memesan di Point Coffee Indomaret!");
+        Console.WriteLine($"Saldo akhir: {myAccount.Balance}");
     }
 }
